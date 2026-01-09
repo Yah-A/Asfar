@@ -810,44 +810,94 @@
         if (!sim.paused) requestAnimationFrame(loop);
       }
 
-      function update(dt) {
-        sim.t += dt;
+      /**
+       * Advance one ball by dt seconds using constant-acceleration kinematics.
+       *
+       * This is more realistic than Euler integration because we:
+       * - use y(t) = y0 + v0 t - ½ g t² and v(t) = v0 - g t exactly
+       * - solve the exact impact time inside the frame when y crosses 0
+       * - allow multiple bounces (each bounce uses v_bounce = e · v_impact)
+       */
+      function advanceBallWithImpacts(b, dt, tStart) {
         const g = ui.g;
+        let remaining = dt;
+        let localTime = 0;
 
-        for (const b of sim.balls) {
-          // Gravity-only acceleration (a = -g)
-          b.v += -g * dt;
-          b.y += b.v * dt;
+        // Prevent infinite loops if extreme settings create many micro-impacts in one frame.
+        const MAX_IMPACTS_PER_FRAME = 6;
+        let impactCount = 0;
 
-          if (!b.impacted && b.y <= 0) {
-            // Ground impact
-            b.y = 0;
+        while (remaining > 0 && impactCount < MAX_IMPACTS_PER_FRAME) {
+          // Predict position after remaining time with exact kinematics.
+          const y0 = b.y;
+          const v0 = b.v;
+          const t = remaining;
+          const y1 = y0 + v0 * t - 0.5 * g * t * t;
+
+          if (y1 >= 0) {
+            // No impact during this slice.
+            b.y = y1;
+            b.v = v0 - g * t;
+            localTime += t;
+            remaining = 0;
+            break;
+          }
+
+          // Impact occurs: solve y0 + v0 thit - ½ g thit² = 0 for thit in (0, t].
+          // Discriminant: v0² + 2 g y0  (always >= 0 if y0 >= 0 and g > 0)
+          const disc = v0 * v0 + 2 * g * y0;
+          const sqrtDisc = Math.sqrt(Math.max(0, disc));
+          const tHit = (v0 + sqrtDisc) / g; // positive root
+
+          // Numerical guard: clamp inside [0, remaining]
+          const th = clamp(tHit, 0, remaining);
+
+          // Velocity at impact (should be downward/negative)
+          const vAtHit = v0 - g * th;
+          const vImpact = Math.abs(vAtHit); // speed
+
+          // Set ball exactly on ground at impact.
+          b.y = 0;
+
+          // Record first impact values exactly at first contact with ground.
+          if (!b.impacted) {
             b.impacted = true;
-            b.tImpact = sim.t;
-
-            const vImpact = Math.abs(b.v); // speed at impact
-            const p = b.m * vImpact; // p = m·v (magnitude)
+            b.tImpact = tStart + localTime + th;
+            const p = b.m * vImpact; // p = m·v (magnitude at impact)
             const { hBounce } = computeBounceHeight(g, b.e, vImpact);
-
-            // Display required impact values:
             const idx = sim.balls.indexOf(b);
             setResult(idx, { vImpact, p, hBounce, tImpact: b.tImpact });
-
-            // Bounce rule:
-            // v_bounce = restitution · v_impact (upward), so set v positive upward.
-            const vBounce = b.e * vImpact;
-            b.v = vBounce;
-          } else if (b.impacted && b.y <= 0) {
-            // After the first bounce, let it settle by stopping tiny motion at ground.
-            b.y = 0;
-            if (Math.abs(b.v) < 0.05) b.v = 0;
           }
+
+          // Bounce rule (physics, no arbitrary scaling):
+          // v_bounce = restitution · v_impact (upward, positive).
+          const vBounce = b.e * vImpact;
+
+          // If bounce speed is tiny, treat as coming to rest at ground (real objects lose energy).
+          if (vBounce < 0.02) {
+            b.v = 0;
+            b.y = 0;
+            return;
+          }
+
+          b.v = vBounce;
+
+          // Consume time up to impact, then continue with remaining slice.
+          localTime += th;
+          remaining -= th;
+          impactCount += 1;
         }
+      }
+
+      function update(dt) {
+        const tStart = sim.t;
+        sim.t += dt;
+        for (const b of sim.balls) advanceBallWithImpacts(b, dt, tStart);
       }
 
       function isSettled() {
         // Stop when all balls are on the ground and essentially not moving.
-        return sim.balls.every((b) => b.y === 0 && Math.abs(b.v) < 1e-6);
+        return sim.balls.every((b) => b.y <= 1e-6 && Math.abs(b.v) < 1e-6);
       }
 
       function loop(ts) {
