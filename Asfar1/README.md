@@ -10,7 +10,7 @@ A small interactive webpage for a physics momentum assignment:
 
 ## How to run
 
-Open `index.html` in any modern browser (Chrome / Edge / Firefox).
+Open `index1.html` in any modern browser (Chrome / Edge / Firefox).
 
 If you prefer using a local server:
 
