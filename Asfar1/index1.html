@@ -1,0 +1,1124 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Momentum Lab — p = m · v</title>
+    <style>
+      :root {
+        --bg: #070a12;
+        --panel: rgba(255, 255, 255, 0.06);
+        --panel2: rgba(255, 255, 255, 0.08);
+        --text: rgba(255, 255, 255, 0.92);
+        --muted: rgba(255, 255, 255, 0.68);
+        --border: rgba(255, 255, 255, 0.12);
+        --shadow: rgba(0, 0, 0, 0.4);
+        --danger: #fb7185;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        height: 100%;
+      }
+
+      body {
+        margin: 0;
+        font-family:
+          ui-sans-serif,
+          system-ui,
+          -apple-system,
+          Segoe UI,
+          Roboto,
+          Helvetica,
+          Arial;
+        color: var(--text);
+        background:
+          radial-gradient(1200px 600px at 10% 10%, rgba(139, 92, 246, 0.25), transparent 60%),
+          radial-gradient(900px 500px at 90% 15%, rgba(34, 197, 94, 0.12), transparent 60%),
+          radial-gradient(800px 500px at 50% 90%, rgba(59, 130, 246, 0.18), transparent 60%),
+          var(--bg);
+      }
+
+      .page {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px 16px 32px;
+      }
+
+      header {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: flex-end;
+        justify-content: space-between;
+        gap: 12px;
+        margin-bottom: 14px;
+      }
+
+      h1 {
+        margin: 0;
+        font-size: 34px;
+        letter-spacing: -0.02em;
+        line-height: 1.08;
+      }
+
+      .sub {
+        margin: 8px 0 0;
+        color: var(--muted);
+        max-width: 78ch;
+        font-size: 13px;
+      }
+
+      .grid {
+        display: grid;
+        grid-template-columns: 430px 1fr;
+        gap: 14px;
+      }
+
+      .card {
+        background: linear-gradient(180deg, var(--panel), rgba(255, 255, 255, 0.03));
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        box-shadow: 0 18px 50px var(--shadow);
+        padding: 14px;
+        backdrop-filter: blur(12px);
+      }
+
+      h2 {
+        margin: 4px 0 12px;
+        font-size: 16px;
+        letter-spacing: -0.01em;
+      }
+
+      .muted {
+        color: var(--muted);
+      }
+
+      .equations {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 8px;
+        margin: 10px 0 0;
+      }
+
+      .eqBox {
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        background: rgba(255, 255, 255, 0.05);
+        padding: 10px 10px;
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 10px;
+      }
+
+      .eqBox code {
+        font-family:
+          ui-monospace,
+          SFMono-Regular,
+          Menlo,
+          Monaco,
+          Consolas,
+          "Liberation Mono",
+          "Courier New",
+          monospace;
+        font-size: 13px;
+        color: rgba(255, 255, 255, 0.92);
+        font-weight: 700;
+      }
+
+      .controls {
+        display: grid;
+        gap: 12px;
+      }
+
+      .row {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+
+      label {
+        display: block;
+        font-size: 12px;
+        color: rgba(255, 255, 255, 0.84);
+        margin-bottom: 6px;
+      }
+
+      input[type="number"] {
+        width: 120px;
+        padding: 10px 10px;
+        border-radius: 12px;
+        border: 1px solid var(--border);
+        background: rgba(255, 255, 255, 0.06);
+        color: var(--text);
+        outline: none;
+      }
+
+      input[type="number"]::placeholder {
+        color: rgba(255, 255, 255, 0.45);
+      }
+
+      input[type="number"]:focus {
+        border-color: rgba(139, 92, 246, 0.6);
+        box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.18);
+      }
+
+      input[type="range"] {
+        width: 100%;
+      }
+
+      .pill {
+        padding: 6px 10px;
+        border: 1px solid var(--border);
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.06);
+        font-size: 12px;
+        color: rgba(255, 255, 255, 0.85);
+      }
+
+      .btn {
+        border: 1px solid var(--border);
+        background: rgba(255, 255, 255, 0.06);
+        color: var(--text);
+        border-radius: 14px;
+        padding: 10px 14px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: transform 0.08s ease, background 0.15s ease, border-color 0.15s ease,
+          opacity 0.15s ease;
+      }
+
+      .btn:hover {
+        transform: translateY(-1px);
+        background: rgba(255, 255, 255, 0.09);
+      }
+
+      .btn.primary {
+        background: linear-gradient(180deg, rgba(139, 92, 246, 0.95), rgba(124, 58, 237, 0.85));
+        border-color: rgba(139, 92, 246, 0.5);
+      }
+
+      .btn:disabled {
+        opacity: 0.55;
+        cursor: not-allowed;
+      }
+
+      .balls {
+        display: grid;
+        gap: 10px;
+        margin-top: 10px;
+      }
+
+      .ballCard {
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        background: rgba(255, 255, 255, 0.05);
+        padding: 10px;
+      }
+
+      .ballHeader {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+        margin-bottom: 8px;
+      }
+
+      .ballTitle {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-weight: 800;
+        font-size: 13px;
+      }
+
+      .dot {
+        width: 12px;
+        height: 12px;
+        border-radius: 999px;
+        background: var(--swatch);
+        box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.08);
+      }
+
+      .ballGrid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 10px;
+      }
+
+      .hint {
+        margin: 8px 0 0;
+        font-size: 12px;
+        color: var(--muted);
+      }
+
+      .danger {
+        color: rgba(255, 255, 255, 0.92);
+        background: rgba(251, 113, 133, 0.12);
+        border: 1px solid rgba(251, 113, 133, 0.35);
+        border-radius: 14px;
+        padding: 10px;
+        font-size: 12px;
+        margin-top: 10px;
+        display: none;
+      }
+
+      .rightTop {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        flex-wrap: wrap;
+      }
+
+      .canvasWrap {
+        margin-top: 10px;
+        border-radius: 16px;
+        overflow: hidden;
+        border: 1px solid var(--border);
+        background: rgba(0, 0, 0, 0.35);
+      }
+
+      canvas {
+        display: block;
+        width: 100%;
+        height: auto;
+      }
+
+      .resultsGrid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 10px;
+        margin-top: 12px;
+      }
+
+      .resultCard {
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        background: rgba(255, 255, 255, 0.045);
+        padding: 10px;
+      }
+
+      .resultCard h3 {
+        margin: 0 0 8px;
+        font-size: 12px;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        color: rgba(255, 255, 255, 0.84);
+      }
+
+      .kv {
+        display: grid;
+        grid-template-columns: 1fr auto;
+        gap: 6px 10px;
+        font-size: 12px;
+        color: rgba(255, 255, 255, 0.82);
+      }
+
+      .kv .k {
+        color: rgba(255, 255, 255, 0.66);
+      }
+
+      .footer {
+        margin-top: 12px;
+        color: var(--muted);
+        font-size: 12px;
+      }
+
+      @media (max-width: 980px) {
+        .grid {
+          grid-template-columns: 1fr;
+        }
+        .resultsGrid {
+          grid-template-columns: 1fr;
+        }
+        .ballGrid {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page">
+      <header>
+        <div>
+          <h1>Momentum Lab</h1>
+          <p class="sub">
+            This page focuses on momentum at <strong>ground impact</strong>.
+            <span class="muted">
+              With no air resistance, dropping from the same height gives the same impact speed, so
+              momentum differs only because mass differs.
+            </span>
+          </p>
+        </div>
+      </header>
+
+      <main class="grid">
+        <section class="card">
+          <h2>Controls</h2>
+
+          <div class="controls">
+            <div>
+              <label for="gravity">Gravity (m/s²)</label>
+              <div class="row">
+                <input id="gravity" type="number" min="0.1" max="30" step="0.01" />
+                <span class="pill" id="gravityPill"></span>
+              </div>
+              <p class="hint">Physics rule: the only acceleration is gravity.</p>
+            </div>
+
+            <div class="row">
+              <button id="launchBtn" class="btn primary" type="button">Drop / Launch</button>
+              <button id="resetBtn" class="btn" type="button">Reset</button>
+              <button id="pauseBtn" class="btn" type="button">Pause</button>
+            </div>
+          </div>
+
+          <div class="equations">
+            <div class="eqBox">
+              <code>p = m · v</code>
+              <span class="muted">momentum at impact</span>
+            </div>
+            <div class="eqBox">
+              <code>v = √(2 g h)</code>
+              <span class="muted">drop from rest</span>
+            </div>
+            <div class="eqBox">
+              <code>h = v² / (2 g)</code>
+              <span class="muted">bounce height from bounce speed</span>
+            </div>
+          </div>
+
+          <p class="hint">
+            Why velocity can be the same: for a drop from rest, \(v=\sqrt{2gh}\) depends on height and
+            gravity only.
+            <br />
+            Why momentum differs: momentum uses mass too, \(p=m·v\), so heavier balls have larger
+            momentum at the same speed.
+          </p>
+
+          <div class="balls" id="ballControls"></div>
+
+          <div class="danger" id="errorBox"></div>
+        </section>
+
+        <section class="card">
+          <div class="rightTop">
+            <div>
+              <h2>Simulation</h2>
+              <div class="muted" id="statusText"></div>
+            </div>
+            <div class="row">
+              <span class="pill" id="worldScalePill"></span>
+            </div>
+          </div>
+
+          <div class="canvasWrap">
+            <canvas id="c" width="1000" height="520" aria-label="Momentum simulation canvas"></canvas>
+          </div>
+
+          <div class="resultsGrid" id="results"></div>
+
+          <div class="footer">
+            Quality checks to try: change <strong>mass</strong> only (impact speed should not change),
+            change <strong>height</strong> (impact speed should change), change <strong>gravity</strong>
+            (impact speed + bounce height should change), verify <strong>p = m·v</strong> numerically.
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <script>
+      /**
+       * Momentum Lab — physics rules implemented exactly as requested.
+       *
+       * Coordinate choice:
+       * - y is HEIGHT above ground in meters (y >= 0).
+       * - v is vertical velocity in m/s (positive upward, negative downward).
+       * - acceleration is always a = -g (gravity only).
+       *
+       * Impact:
+       * - When y reaches 0, impact speed is |v_impact|.
+       * - Momentum magnitude at impact: p = m · |v_impact|.
+       *
+       * Bounce:
+       * - Bounce speed: v_bounce = restitution · |v_impact|.
+       * - Bounce height derived from physics: h_bounce = v_bounce² / (2g).
+       *
+       * Drop vs optional velocity override rule:
+       * - If the velocity override is NOT set: impact speed uses v = √(2gh) (drop from rest).
+       * - If the velocity override IS set: we treat that number as the intended IMPACT speed,
+       *   and we compute the required initial velocity at the starting height that makes the ball
+       *   hit the ground with exactly that impact speed under gravity-only motion.
+       *   This uses the physics identity: v_impact² = v0² + 2gh.
+       *
+       *   IMPORTANT: This means the height is NOT used to compute the impact speed (the user sets it),
+       *   but height is still used to compute the initial velocity needed to satisfy gravity-only physics.
+       *   If the requested impact speed is too small for the chosen height (v^2 < 2gh), it's physically
+       *   impossible, so we show an error and prevent launching until fixed.
+       */
+
+      function clamp(n, a, b) {
+        return Math.min(b, Math.max(a, n));
+      }
+
+      function isFiniteNumber(x) {
+        return typeof x === "number" && Number.isFinite(x);
+      }
+
+      function fmt(n, digits = 3) {
+        if (!Number.isFinite(n)) return "—";
+        return n.toFixed(digits);
+      }
+
+      function qs(sel) {
+        return document.querySelector(sel);
+      }
+
+      function el(tag, attrs = {}, children = []) {
+        const node = document.createElement(tag);
+        for (const [k, v] of Object.entries(attrs)) {
+          if (k === "class") node.className = v;
+          else if (k === "style") node.setAttribute("style", v);
+          else if (k.startsWith("on") && typeof v === "function") node.addEventListener(k.slice(2), v);
+          else node.setAttribute(k, v);
+        }
+        for (const c of children) node.appendChild(typeof c === "string" ? document.createTextNode(c) : c);
+        return node;
+      }
+
+      const COLORS = ["#6ee7ff", "#a7f3d0", "#fde68a"];
+      const NAMES = ["Ball A", "Ball B", "Ball C"];
+
+      const dom = {
+        gravity: /** @type {HTMLInputElement} */ (qs("#gravity")),
+        gravityPill: qs("#gravityPill"),
+        launchBtn: /** @type {HTMLButtonElement} */ (qs("#launchBtn")),
+        resetBtn: /** @type {HTMLButtonElement} */ (qs("#resetBtn")),
+        pauseBtn: /** @type {HTMLButtonElement} */ (qs("#pauseBtn")),
+        ballControls: qs("#ballControls"),
+        errorBox: qs("#errorBox"),
+        statusText: qs("#statusText"),
+        worldScalePill: qs("#worldScalePill"),
+        results: qs("#results"),
+        canvas: /** @type {HTMLCanvasElement} */ (qs("#c")),
+      };
+
+      /**
+       * UI state (editable).
+       * Derived values are computed strictly from equations, never hand-tuned.
+       */
+      const ui = {
+        g: 9.81,
+        balls: [
+          { m: 0.5, h0: 3.0, vOverride: null, e: 0.75 },
+          { m: 1.0, h0: 3.0, vOverride: null, e: 0.75 },
+          { m: 2.0, h0: 3.0, vOverride: null, e: 0.75 },
+        ],
+      };
+
+      /**
+       * Simulation state (changes during animation).
+       * Each ball simulates gravity-only motion and bounces.
+       */
+      const sim = {
+        running: false,
+        paused: false,
+        t: 0,
+        lastTs: null,
+        // worldHeightMeters determines pixels-per-meter; it is derived from chosen heights + bounce heights.
+        worldHeightMeters: 5,
+        balls: [],
+      };
+
+      function setError(message) {
+        if (!message) {
+          dom.errorBox.style.display = "none";
+          dom.errorBox.textContent = "";
+          return;
+        }
+        dom.errorBox.style.display = "block";
+        dom.errorBox.textContent = message;
+      }
+
+      function setStatus(message) {
+        dom.statusText.textContent = message;
+      }
+
+      function updateGravityUI() {
+        dom.gravity.value = String(ui.g);
+        dom.gravityPill.textContent = `g = ${fmt(ui.g, 2)} m/s²`;
+      }
+
+      function parseOptionalNumber(value) {
+        const s = String(value ?? "").trim();
+        if (s === "") return null;
+        const n = Number(s);
+        return Number.isFinite(n) ? n : null;
+      }
+
+      /**
+       * Compute impact speed for a ball based on the rules.
+       * Returns { ok, vImpact, v0, error }.
+       */
+      function computeImpactFromInputs(g, h0, vOverride) {
+        // Drop from rest:
+        if (vOverride == null) {
+          const vImpact = Math.sqrt(2 * g * h0);
+          const v0 = 0; // dropped from rest
+          return { ok: true, vImpact, v0 };
+        }
+
+        // Override rule: use the override directly as intended impact speed (m/s).
+        const vImpact = Math.abs(vOverride);
+        // Physics constraint (gravity only): v_impact^2 = v0^2 + 2gh0
+        const disc = vImpact * vImpact - 2 * g * h0;
+        if (disc < -1e-12) {
+          return {
+            ok: false,
+            error: `Velocity override is too small for height. Need |v| ≥ √(2gh) = ${fmt(
+              Math.sqrt(2 * g * h0),
+              3,
+            )} m/s for h=${fmt(h0, 2)} m at g=${fmt(g, 2)}.`,
+          };
+        }
+
+        const v0Mag = Math.sqrt(Math.max(0, disc));
+        // Choose a physically consistent initial velocity direction:
+        // If user typed a negative number, interpret that as "start downward" (v0 negative).
+        // If user typed a positive number, interpret that as "start upward" (v0 positive).
+        const v0 = vOverride < 0 ? -v0Mag : v0Mag;
+        return { ok: true, vImpact, v0 };
+      }
+
+      function computeBounceHeight(g, restitution, vImpact) {
+        const vBounce = restitution * vImpact; // speed (m/s)
+        const hBounce = (vBounce * vBounce) / (2 * g);
+        return { vBounce, hBounce };
+      }
+
+      function computeWorldHeightMeters() {
+        // World height must cover the maximum of initial heights and first bounce heights.
+        // This is not arbitrary scaling: it's derived from computed values so that pixels map linearly to meters.
+        let maxH = 0.5;
+        for (let i = 0; i < 3; i += 1) {
+          const { h0, e, vOverride } = ui.balls[i];
+          const g = ui.g;
+          const impact = computeImpactFromInputs(g, h0, vOverride);
+          if (!impact.ok) {
+            maxH = Math.max(maxH, h0);
+            continue;
+          }
+          const bounce = computeBounceHeight(g, e, impact.vImpact);
+          maxH = Math.max(maxH, h0, bounce.hBounce);
+        }
+        // Add a small derived margin (10%) to prevent clipping at the top.
+        return maxH * 1.1;
+      }
+
+      function rebuildResultsCards() {
+        dom.results.innerHTML = "";
+        for (let i = 0; i < 3; i += 1) {
+          dom.results.appendChild(
+            el(
+              "div",
+              { class: "resultCard", id: `result-${i}` },
+              [
+                el("h3", {}, [
+                  `${NAMES[i]} `,
+                  el("span", { class: "dot", style: `--swatch:${COLORS[i]};vertical-align:middle` }),
+                ]),
+                el("div", { class: "kv" }, [
+                  el("div", { class: "k" }, ["Impact v (m/s)"]),
+                  el("div", { id: `impactV-${i}` }, ["—"]),
+                  el("div", { class: "k" }, ["Momentum p = m·v (kg·m/s)"]),
+                  el("div", { id: `impactP-${i}` }, ["—"]),
+                  el("div", { class: "k" }, ["Bounce height h (m)"]),
+                  el("div", { id: `bounceH-${i}` }, ["—"]),
+                  el("div", { class: "k" }, ["Time to impact (s)"]),
+                  el("div", { id: `impactT-${i}` }, ["—"]),
+                ]),
+              ],
+            ),
+          );
+        }
+      }
+
+      function setResult(i, data) {
+        const vEl = qs(`#impactV-${i}`);
+        const pEl = qs(`#impactP-${i}`);
+        const hEl = qs(`#bounceH-${i}`);
+        const tEl = qs(`#impactT-${i}`);
+        if (!vEl || !pEl || !hEl || !tEl) return;
+        vEl.textContent = data?.vImpact != null ? fmt(data.vImpact, 3) : "—";
+        pEl.textContent = data?.p != null ? fmt(data.p, 3) : "—";
+        hEl.textContent = data?.hBounce != null ? fmt(data.hBounce, 3) : "—";
+        tEl.textContent = data?.tImpact != null ? fmt(data.tImpact, 3) : "—";
+      }
+
+      function buildBallControls() {
+        dom.ballControls.innerHTML = "";
+
+        for (let i = 0; i < 3; i += 1) {
+          const card = el("div", { class: "ballCard" }, [
+            el("div", { class: "ballHeader" }, [
+              el("div", { class: "ballTitle" }, [
+                el("span", { class: "dot", style: `--swatch:${COLORS[i]}` }),
+                NAMES[i],
+              ]),
+              el("span", { class: "pill" }, [`Color-coded`]),
+            ]),
+            el("div", { class: "ballGrid" }, [
+              el("div", {}, [
+                el("label", { for: `m-${i}` }, ["Mass (kg)"]),
+                el("input", { id: `m-${i}`, type: "number", min: "0.05", max: "50", step: "0.05" }),
+              ]),
+              el("div", {}, [
+                el("label", { for: `h-${i}` }, ["Initial height (m)"]),
+                el("input", { id: `h-${i}`, type: "number", min: "0", max: "20", step: "0.05" }),
+              ]),
+              el("div", {}, [
+                el("label", { for: `v-${i}` }, ["Initial vertical velocity (m/s) (optional override)"]),
+                el("input", {
+                  id: `v-${i}`,
+                  type: "number",
+                  step: "0.05",
+                  placeholder: "leave blank",
+                }),
+                el("div", { class: "hint" }, [
+                  "If set: the number is used as the intended impact speed (rule). Positive means we start upward, negative starts downward.",
+                ]),
+              ]),
+              el("div", {}, [
+                el("label", { for: `e-${i}` }, ["Coefficient of restitution (0–1)"]),
+                el("input", { id: `e-${i}`, type: "range", min: "0", max: "1", step: "0.01" }),
+                el("div", { class: "row" }, [
+                  el("span", { class: "pill", id: `eOut-${i}` }, ["—"]),
+                ]),
+              ]),
+            ]),
+          ]);
+
+          dom.ballControls.appendChild(card);
+        }
+      }
+
+      function syncControlsFromState() {
+        updateGravityUI();
+        for (let i = 0; i < 3; i += 1) {
+          qs(`#m-${i}`).value = String(ui.balls[i].m);
+          qs(`#h-${i}`).value = String(ui.balls[i].h0);
+          qs(`#v-${i}`).value = ui.balls[i].vOverride == null ? "" : String(ui.balls[i].vOverride);
+          qs(`#e-${i}`).value = String(ui.balls[i].e);
+          qs(`#eOut-${i}`).textContent = `e = ${fmt(ui.balls[i].e, 2)}`;
+        }
+      }
+
+      function stopSim() {
+        sim.running = false;
+        sim.paused = false;
+        sim.t = 0;
+        sim.lastTs = null;
+        setStatus("Ready");
+        dom.pauseBtn.textContent = "Pause";
+        dom.launchBtn.disabled = false;
+        dom.pauseBtn.disabled = true;
+      }
+
+      function resetAll() {
+        stopSim();
+        setError("");
+        for (let i = 0; i < 3; i += 1) setResult(i, null);
+        draw(); // draw still frame
+      }
+
+      function validateAllInputs() {
+        const g = ui.g;
+        if (!(g > 0)) return { ok: false, error: "Gravity must be > 0." };
+        for (let i = 0; i < 3; i += 1) {
+          const b = ui.balls[i];
+          if (!(b.m > 0)) return { ok: false, error: `${NAMES[i]} mass must be > 0.` };
+          if (!(b.h0 >= 0)) return { ok: false, error: `${NAMES[i]} height must be ≥ 0.` };
+          if (!(b.e >= 0 && b.e <= 1)) return { ok: false, error: `${NAMES[i]} restitution must be 0–1.` };
+          const impact = computeImpactFromInputs(g, b.h0, b.vOverride);
+          if (!impact.ok) return { ok: false, error: `${NAMES[i]}: ${impact.error}` };
+        }
+        return { ok: true };
+      }
+
+      function buildSimFromUI() {
+        sim.t = 0;
+        sim.lastTs = null;
+        sim.worldHeightMeters = computeWorldHeightMeters();
+        dom.worldScalePill.textContent = `World height = ${fmt(sim.worldHeightMeters, 2)} m`;
+
+        sim.balls = ui.balls.map((b, i) => {
+          const impact = computeImpactFromInputs(ui.g, b.h0, b.vOverride);
+          const { vBounce, hBounce } = computeBounceHeight(ui.g, b.e, impact.vImpact);
+
+          return {
+            name: NAMES[i],
+            color: COLORS[i],
+            m: b.m,
+            e: b.e,
+            // Initial conditions:
+            y: b.h0,
+            v: impact.v0, // computed so that the requested impact speed is achieved
+            // Derived targets (for display + validation):
+            vImpactTarget: impact.vImpact,
+            vBounce,
+            hBounce,
+            impacted: false,
+            tImpact: null,
+          };
+        });
+      }
+
+      function launch() {
+        // Always rebuild from UI for reproducibility.
+        setError("");
+
+        const check = validateAllInputs();
+        if (!check.ok) {
+          setError(check.error);
+          return;
+        }
+
+        buildSimFromUI();
+        for (let i = 0; i < 3; i += 1) setResult(i, null);
+
+        sim.running = true;
+        sim.paused = false;
+        dom.launchBtn.disabled = true;
+        dom.pauseBtn.disabled = false;
+        dom.pauseBtn.textContent = "Pause";
+        setStatus("Running (gravity-only motion)");
+        requestAnimationFrame(loop);
+      }
+
+      function togglePause() {
+        if (!sim.running) return;
+        sim.paused = !sim.paused;
+        sim.lastTs = null;
+        dom.pauseBtn.textContent = sim.paused ? "Resume" : "Pause";
+        setStatus(sim.paused ? "Paused" : "Running (gravity-only motion)");
+        if (!sim.paused) requestAnimationFrame(loop);
+      }
+
+      /**
+       * Advance one ball by dt seconds using constant-acceleration kinematics.
+       *
+       * This is more realistic than Euler integration because we:
+       * - use y(t) = y0 + v0 t - ½ g t² and v(t) = v0 - g t exactly
+       * - solve the exact impact time inside the frame when y crosses 0
+       * - allow multiple bounces (each bounce uses v_bounce = e · v_impact)
+       */
+      function advanceBallWithImpacts(b, dt, tStart) {
+        const g = ui.g;
+        let remaining = dt;
+        let localTime = 0;
+
+        // Prevent infinite loops if extreme settings create many micro-impacts in one frame.
+        const MAX_IMPACTS_PER_FRAME = 6;
+        let impactCount = 0;
+
+        while (remaining > 0 && impactCount < MAX_IMPACTS_PER_FRAME) {
+          // Predict position after remaining time with exact kinematics.
+          const y0 = b.y;
+          const v0 = b.v;
+          const t = remaining;
+          const y1 = y0 + v0 * t - 0.5 * g * t * t;
+
+          if (y1 >= 0) {
+            // No impact during this slice.
+            b.y = y1;
+            b.v = v0 - g * t;
+            localTime += t;
+            remaining = 0;
+            break;
+          }
+
+          // Impact occurs: solve y0 + v0 thit - ½ g thit² = 0 for thit in (0, t].
+          // Discriminant: v0² + 2 g y0  (always >= 0 if y0 >= 0 and g > 0)
+          const disc = v0 * v0 + 2 * g * y0;
+          const sqrtDisc = Math.sqrt(Math.max(0, disc));
+          const tHit = (v0 + sqrtDisc) / g; // positive root
+
+          // Numerical guard: clamp inside [0, remaining]
+          const th = clamp(tHit, 0, remaining);
+
+          // Velocity at impact (should be downward/negative)
+          const vAtHit = v0 - g * th;
+          const vImpact = Math.abs(vAtHit); // speed
+
+          // Set ball exactly on ground at impact.
+          b.y = 0;
+
+          // Record first impact values exactly at first contact with ground.
+          if (!b.impacted) {
+            b.impacted = true;
+            b.tImpact = tStart + localTime + th;
+            const p = b.m * vImpact; // p = m·v (magnitude at impact)
+            const { hBounce } = computeBounceHeight(g, b.e, vImpact);
+            const idx = sim.balls.indexOf(b);
+            setResult(idx, { vImpact, p, hBounce, tImpact: b.tImpact });
+          }
+
+          // Bounce rule (physics, no arbitrary scaling):
+          // v_bounce = restitution · v_impact (upward, positive).
+          const vBounce = b.e * vImpact;
+
+          // If bounce speed is tiny, treat as coming to rest at ground (real objects lose energy).
+          if (vBounce < 0.02) {
+            b.v = 0;
+            b.y = 0;
+            return;
+          }
+
+          b.v = vBounce;
+
+          // Consume time up to impact, then continue with remaining slice.
+          localTime += th;
+          remaining -= th;
+          impactCount += 1;
+        }
+      }
+
+      function update(dt) {
+        const tStart = sim.t;
+        sim.t += dt;
+        for (const b of sim.balls) advanceBallWithImpacts(b, dt, tStart);
+      }
+
+      function isSettled() {
+        // Stop when all balls are on the ground and essentially not moving.
+        return sim.balls.every((b) => b.y <= 1e-6 && Math.abs(b.v) < 1e-6);
+      }
+
+      function loop(ts) {
+        if (!sim.running || sim.paused) return;
+        if (sim.lastTs == null) sim.lastTs = ts;
+        const rawDt = (ts - sim.lastTs) / 1000;
+        sim.lastTs = ts;
+        const dt = clamp(rawDt, 0, 1 / 30);
+
+        // Substep for smooth contact
+        const steps = dt > 1 / 90 ? 2 : 1;
+        for (let i = 0; i < steps; i += 1) update(dt / steps);
+
+        draw();
+
+        if (isSettled()) {
+          sim.running = false;
+          dom.launchBtn.disabled = false;
+          dom.pauseBtn.disabled = true;
+          setStatus("Done (all balls settled)");
+          return;
+        }
+        requestAnimationFrame(loop);
+      }
+
+      function draw() {
+        const canvas = dom.canvas;
+        const ctx = canvas.getContext("2d");
+        const W = canvas.width;
+        const H = canvas.height;
+
+        const pad = 26;
+        const top = 18;
+        const groundThickness = 18;
+        const groundY = H - pad - groundThickness;
+        const usablePx = groundY - top;
+
+        const worldH = Math.max(0.5, sim.worldHeightMeters);
+        const pxPerM = usablePx / worldH;
+
+        // Background
+        ctx.clearRect(0, 0, W, H);
+        const bg = ctx.createLinearGradient(0, 0, 0, H);
+        bg.addColorStop(0, "rgba(255,255,255,0.06)");
+        bg.addColorStop(1, "rgba(0,0,0,0.35)");
+        ctx.fillStyle = bg;
+        ctx.fillRect(0, 0, W, H);
+
+        // Height grid lines (meters)
+        ctx.save();
+        ctx.strokeStyle = "rgba(255,255,255,0.10)";
+        ctx.fillStyle = "rgba(255,255,255,0.55)";
+        ctx.lineWidth = 1;
+        ctx.font = "12px ui-sans-serif, system-ui";
+        const tickCount = Math.min(10, Math.max(3, Math.floor(worldH)));
+        for (let i = 0; i <= tickCount; i += 1) {
+          const yM = (worldH * i) / tickCount;
+          const yPx = groundY - yM * pxPerM;
+          ctx.beginPath();
+          ctx.moveTo(pad, yPx);
+          ctx.lineTo(W - pad, yPx);
+          ctx.stroke();
+          if (i === 0) ctx.fillText("0 m (ground)", pad + 6, yPx - 6);
+        }
+        ctx.restore();
+
+        // Ground
+        ctx.save();
+        ctx.fillStyle = "rgba(255,255,255,0.10)";
+        ctx.fillRect(0, groundY, W, groundThickness);
+        ctx.fillStyle = "rgba(255,255,255,0.16)";
+        ctx.fillRect(0, groundY, W, 2);
+        ctx.restore();
+
+        // Lanes + balls
+        const lanes = 3;
+        for (let i = 0; i < lanes; i += 1) {
+          const laneW = (W - pad * 2) / lanes;
+          const x0 = pad + i * laneW;
+          const xMid = x0 + laneW / 2;
+
+          // Lane divider
+          ctx.save();
+          ctx.strokeStyle = "rgba(255,255,255,0.10)";
+          ctx.setLineDash([5, 6]);
+          if (i > 0) {
+            ctx.beginPath();
+            ctx.moveTo(x0, top);
+            ctx.lineTo(x0, groundY + groundThickness);
+            ctx.stroke();
+          }
+          ctx.restore();
+
+          const b = sim.balls[i] || {
+            name: NAMES[i],
+            color: COLORS[i],
+            y: ui.balls[i].h0,
+            v: 0,
+          };
+
+          const yPx = groundY - b.y * pxPerM;
+          const radiusPx = 20 + i * 2;
+
+          // Shadow
+          const distToGround = groundY - yPx;
+          const shadowAlpha = clamp(1 - distToGround / usablePx, 0, 1) * 0.35;
+          ctx.save();
+          ctx.globalAlpha = shadowAlpha;
+          ctx.fillStyle = "rgba(0,0,0,0.7)";
+          ctx.beginPath();
+          ctx.ellipse(xMid, groundY + groundThickness / 2, radiusPx * 0.9, radiusPx * 0.33, 0, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.restore();
+
+          // Ball
+          const grad = ctx.createRadialGradient(
+            xMid - radiusPx * 0.35,
+            yPx - radiusPx * 0.35,
+            radiusPx * 0.2,
+            xMid,
+            yPx,
+            radiusPx * 1.1,
+          );
+          grad.addColorStop(0, "rgba(255,255,255,0.95)");
+          grad.addColorStop(0.22, b.color);
+          grad.addColorStop(1, "rgba(0,0,0,0.35)");
+          ctx.save();
+          ctx.fillStyle = grad;
+          ctx.strokeStyle = "rgba(255,255,255,0.22)";
+          ctx.lineWidth = 2;
+          ctx.beginPath();
+          ctx.arc(xMid, yPx, radiusPx, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.stroke();
+          ctx.restore();
+
+          // Labels
+          ctx.save();
+          ctx.fillStyle = "rgba(255,255,255,0.86)";
+          ctx.font = "12px ui-sans-serif, system-ui";
+          ctx.fillText(`${NAMES[i]}`, x0 + 10, top + 14);
+          ctx.fillStyle = "rgba(255,255,255,0.68)";
+          ctx.fillText(`y=${fmt(b.y, 2)} m`, x0 + 10, top + 30);
+          ctx.fillText(`v=${fmt(b.v, 2)} m/s`, x0 + 10, top + 46);
+          ctx.restore();
+        }
+
+        // HUD line
+        ctx.save();
+        ctx.fillStyle = "rgba(255,255,255,0.75)";
+        ctx.font = "12px ui-sans-serif, system-ui";
+        const status = sim.running ? (sim.paused ? "Paused" : "Running") : "Ready";
+        ctx.fillText(`t=${fmt(sim.t, 2)} s   |   g=${fmt(ui.g, 2)} m/s²   |   ${status}`, 20, 16);
+        ctx.restore();
+      }
+
+      function wireEvents() {
+        dom.gravity.addEventListener("input", () => {
+          ui.g = clamp(Number(dom.gravity.value), 0.1, 30);
+          updateGravityUI();
+          sim.worldHeightMeters = computeWorldHeightMeters();
+          dom.worldScalePill.textContent = `World height = ${fmt(sim.worldHeightMeters, 2)} m`;
+          // Reset derived results (changing g changes v and bounce height).
+          for (let i = 0; i < 3; i += 1) setResult(i, null);
+          setError("");
+          draw();
+        });
+
+        for (let i = 0; i < 3; i += 1) {
+          qs(`#m-${i}`).addEventListener("input", (e) => {
+            ui.balls[i].m = clamp(Number(e.target.value), 0.05, 50);
+            e.target.value = String(ui.balls[i].m);
+            // Mass must NOT affect speed: only momentum will change. So reset display only.
+            setResult(i, null);
+            setError("");
+            draw();
+          });
+
+          qs(`#h-${i}`).addEventListener("input", (e) => {
+            ui.balls[i].h0 = clamp(Number(e.target.value), 0, 20);
+            e.target.value = String(ui.balls[i].h0);
+            sim.worldHeightMeters = computeWorldHeightMeters();
+            dom.worldScalePill.textContent = `World height = ${fmt(sim.worldHeightMeters, 2)} m`;
+            setResult(i, null);
+            setError("");
+            draw();
+          });
+
+          qs(`#v-${i}`).addEventListener("input", (e) => {
+            ui.balls[i].vOverride = parseOptionalNumber(e.target.value);
+            setResult(i, null);
+            setError("");
+            draw();
+          });
+
+          qs(`#e-${i}`).addEventListener("input", (e) => {
+            ui.balls[i].e = clamp(Number(e.target.value), 0, 1);
+            qs(`#eOut-${i}`).textContent = `e = ${fmt(ui.balls[i].e, 2)}`;
+            sim.worldHeightMeters = computeWorldHeightMeters();
+            dom.worldScalePill.textContent = `World height = ${fmt(sim.worldHeightMeters, 2)} m`;
+            setResult(i, null);
+            setError("");
+            draw();
+          });
+        }
+
+        dom.launchBtn.addEventListener("click", launch);
+        dom.resetBtn.addEventListener("click", resetAll);
+        dom.pauseBtn.addEventListener("click", togglePause);
+      }
+
+      // Boot
+      buildBallControls();
+      rebuildResultsCards();
+      syncControlsFromState();
+      stopSim();
+      sim.worldHeightMeters = computeWorldHeightMeters();
+      dom.worldScalePill.textContent = `World height = ${fmt(sim.worldHeightMeters, 2)} m`;
+      dom.pauseBtn.disabled = true;
+      draw();
+      wireEvents();
+    </script>
+  </body>
+</html>
