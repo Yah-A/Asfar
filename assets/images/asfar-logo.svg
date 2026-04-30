@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 1024 1024" width="1024" height="1024">
+  <defs>
+    <!-- Background gradient -->
+    <radialGradient id="bgGradient" cx="50%" cy="45%" r="70%" fx="50%" fy="45%">
+      <stop offset="0%" style="stop-color:#0a3d62;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#051c2c;stop-opacity:1" />
+    </radialGradient>
+    
+    <!-- Gold gradient for text and elements -->
+    <linearGradient id="goldGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#f5d67b;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#d4a84b;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#c49a3b;stop-opacity:1" />
+    </linearGradient>
+    
+    <!-- Gold gradient for moon -->
+    <linearGradient id="moonGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#f5d67b;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#c49a3b;stop-opacity:1" />
+    </linearGradient>
+    
+    <!-- Book page gradient -->
+    <linearGradient id="pageGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#f5f0e1;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#e8dcc8;stop-opacity:1" />
+    </linearGradient>
+    
+    <!-- Tablet gradient -->
+    <linearGradient id="tabletGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#4a9ebb;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#2d7a99;stop-opacity:1" />
+    </linearGradient>
+    
+    <!-- Shadow filter -->
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="4" stdDeviation="8" flood-color="#000" flood-opacity="0.3"/>
+    </filter>
+    
+    <!-- Glow filter for gold elements -->
+    <filter id="goldGlow" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="3" result="blur"/>
+      <feFlood flood-color="#f5d67b" flood-opacity="0.4"/>
+      <feComposite in2="blur" operator="in"/>
+      <feMerge>
+        <feMergeNode/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="1024" height="1024" fill="url(#bgGradient)"/>
+  
+  <!-- Stars -->
+  <g fill="#f5d67b">
+    <!-- Main star above crescent -->
+    <polygon points="512,165 517,180 533,180 520,190 525,205 512,196 499,205 504,190 491,180 507,180" filter="url(#goldGlow)"/>
+    <!-- Smaller star -->
+    <polygon points="545,195 548,203 557,203 550,209 553,217 545,212 537,217 540,209 533,203 542,203" filter="url(#goldGlow)"/>
+  </g>
+  
+  <!-- Crescent Moon -->
+  <g filter="url(#goldGlow)">
+    <path d="M420,220 
+             Q380,280 420,350 
+             Q460,400 520,390 
+             Q440,390 410,340 
+             Q380,290 420,220 Z" 
+          fill="url(#moonGradient)"/>
+  </g>
+  
+  <!-- Decorative dots above text -->
+  <g fill="#f5d67b" opacity="0.9">
+    <circle cx="395" cy="380" r="4"/>
+    <circle cx="410" cy="370" r="3"/>
+  </g>
+  
+  <!-- Main "Asfar" text -->
+  <g filter="url(#goldGlow)">
+    <text x="512" y="500" 
+          font-family="'Brush Script MT', 'Segoe Script', cursive" 
+          font-size="180" 
+          font-weight="normal"
+          fill="url(#goldGradient)" 
+          text-anchor="middle"
+          style="font-style: italic;">Asfar</text>
+  </g>
+  
+  <!-- Decorative flourish under text -->
+  <path d="M320,520 Q400,540 512,535 Q624,530 704,520" 
+        stroke="url(#goldGradient)" 
+        stroke-width="3" 
+        fill="none"
+        opacity="0.6"/>
+  
+  <!-- Dot accent on 'a' -->
+  <circle cx="583" cy="410" r="6" fill="url(#goldGradient)" filter="url(#goldGlow)"/>
+  
+  <!-- Left Book -->
+  <g transform="translate(220, 620) rotate(-15)" filter="url(#shadow)">
+    <!-- Book spine -->
+    <rect x="0" y="0" width="15" height="100" fill="#8b6914" rx="2"/>
+    <!-- Left pages -->
+    <path d="M15,0 Q60,-15 120,5 L120,100 Q60,80 15,100 Z" fill="url(#pageGradient)"/>
+    <!-- Right pages -->
+    <path d="M15,0 Q-30,-15 -80,5 L-80,100 Q-30,80 15,100 Z" fill="url(#pageGradient)" opacity="0.9"/>
+    <!-- Page lines -->
+    <g stroke="#c4b89a" stroke-width="1" opacity="0.5">
+      <path d="M25,20 Q55,10 100,25"/>
+      <path d="M25,35 Q55,25 100,40"/>
+      <path d="M25,50 Q55,40 100,55"/>
+      <path d="M25,65 Q55,55 100,70"/>
+    </g>
+  </g>
+  
+  <!-- Tablet/Device -->
+  <g transform="translate(430, 640)" filter="url(#shadow)">
+    <!-- Tablet body -->
+    <rect x="0" y="0" width="160" height="110" rx="8" fill="#e8e8e8" stroke="#ccc" stroke-width="2"/>
+    <!-- Screen -->
+    <rect x="8" y="8" width="144" height="86" rx="4" fill="url(#tabletGradient)"/>
+    <!-- Home button -->
+    <circle cx="80" cy="102" r="4" fill="#ccc"/>
+    <!-- Screen glow -->
+    <rect x="8" y="8" width="144" height="86" rx="4" fill="url(#tabletGradient)" opacity="0.8"/>
+  </g>
+  
+  <!-- Right Book -->
+  <g transform="translate(670, 630) rotate(15)" filter="url(#shadow)">
+    <!-- Book spine -->
+    <rect x="0" y="0" width="15" height="100" fill="#8b6914" rx="2"/>
+    <!-- Left pages -->
+    <path d="M15,0 Q60,-15 120,5 L120,100 Q60,80 15,100 Z" fill="url(#pageGradient)"/>
+    <!-- Right pages -->
+    <path d="M15,0 Q-30,-15 -80,5 L-80,100 Q-30,80 15,100 Z" fill="url(#pageGradient)" opacity="0.9"/>
+    <!-- Page lines -->
+    <g stroke="#c4b89a" stroke-width="1" opacity="0.5">
+      <path d="M25,20 Q55,10 100,25"/>
+      <path d="M25,35 Q55,25 100,40"/>
+      <path d="M25,50 Q55,40 100,55"/>
+    </g>
+  </g>
+  
+  <!-- Registered trademark symbol -->
+  <text x="695" y="515" font-family="Arial" font-size="16" fill="url(#goldGradient)">&#174;</text>
+</svg>
