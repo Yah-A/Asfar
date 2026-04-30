@@ -1,0 +1,79 @@
+* {
+  box-sizing: border-box;
+  font-family: "Inter", "Segoe UI", sans-serif;
+}
+
+body {
+  margin: 0;
+  background: #f6f7fb;
+  color: #1c1f2b;
+}
+
+.hero {
+  background: linear-gradient(130deg, #4f46e5, #06b6d4);
+  color: white;
+  padding: 2.5rem 1.5rem;
+  text-align: center;
+}
+
+main {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem 3rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1.5rem;
+}
+
+.card {
+  background: white;
+  border-radius: 1rem;
+  padding: 1.5rem;
+  box-shadow: 0 10px 25px rgba(15, 23, 42, 0.08);
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+label {
+  font-size: 0.9rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+input,
+select,
+button {
+  padding: 0.55rem 0.75rem;
+  border-radius: 0.5rem;
+  border: 1px solid #d1d5db;
+  font-size: 0.95rem;
+}
+
+button {
+  background: #4f46e5;
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+button:hover {
+  background: #4338ca;
+}
+
+.output {
+  background: #f1f5f9;
+  border-radius: 0.75rem;
+  padding: 0.75rem;
+  min-height: 3rem;
+  white-space: pre-wrap;
+  font-size: 0.9rem;
+}
+
+footer {
+  text-align: center;
+  padding: 1rem 0 2rem;
+  color: #6b7280;
+}
