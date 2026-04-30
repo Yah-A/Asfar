@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Unit 6 Rotational Systems Lab</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="hero">
+      <h1>Unit 6: Energy and Momentum of Rotating Systems</h1>
+      <p>
+        Use these calculators to explore rotational kinetic energy, torque, angular
+        momentum, rolling motion, and orbital dynamics.
+      </p>
+    </header>
+
+    <main>
+      <section class="card">
+        <h2>Rotational Kinetic Energy</h2>
+        <label>
+          Shape
+          <select id="re-shape">
+            <option value="disk">Solid disk</option>
+            <option value="ring">Hoop</option>
+            <option value="sphere">Solid sphere</option>
+          </select>
+        </label>
+        <label>Mass (kg) <input id="re-mass" type="number" step="any" value="2" /></label>
+        <label>Radius (m) <input id="re-radius" type="number" step="any" value="0.3" /></label>
+        <label>Angular speed ω (rad/s) <input id="re-omega" type="number" step="any" value="12" /></label>
+        <button data-action="rot-energy">Compute</button>
+        <pre id="re-output" class="output"></pre>
+      </section>
+
+      <section class="card">
+        <h2>Torque and Work</h2>
+        <label>Torque τ (N·m) <input id="tw-torque" type="number" step="any" value="4" /></label>
+        <label>Angle θ (rad) <input id="tw-angle" type="number" step="any" value="2.5" /></label>
+        <button data-action="torque-work">Compute</button>
+        <pre id="tw-output" class="output"></pre>
+      </section>
+
+      <section class="card">
+        <h2>Angular Momentum</h2>
+        <label>
+          Mode
+          <select id="am-mode">
+            <option value="rigid">Rigid body</option>
+            <option value="particle">Particle</option>
+          </select>
+        </label>
+        <label>
+          Shape
+          <select id="am-shape">
+            <option value="disk">Solid disk</option>
+            <option value="ring">Hoop</option>
+            <option value="sphere">Solid sphere</option>
+          </select>
+        </label>
+        <label>Mass (kg) <input id="am-mass" type="number" step="any" value="1.2" /></label>
+        <label>Radius (m) <input id="am-radius" type="number" step="any" value="0.25" /></label>
+        <label>Angular speed ω (rad/s) <input id="am-omega" type="number" step="any" value="18" /></label>
+        <label>Speed v (m/s) <input id="am-speed" type="number" step="any" value="4" /></label>
+        <label>Angle (deg) <input id="am-angle" type="number" step="any" value="90" /></label>
+        <button data-action="angular-momentum">Compute</button>
+        <pre id="am-output" class="output"></pre>
+      </section>
+
+      <section class="card">
+        <h2>Angular Impulse</h2>
+        <label>Torque τ (N·m) <input id="ai-torque" type="number" step="any" value="3.2" /></label>
+        <label>Time Δt (s) <input id="ai-time" type="number" step="any" value="0.8" /></label>
+        <button data-action="angular-impulse">Compute</button>
+        <pre id="ai-output" class="output"></pre>
+      </section>
+
+      <section class="card">
+        <h2>Conservation of Angular Momentum</h2>
+        <label>Initial inertia I₁ (kg·m²) <input id="co-i1" type="number" step="any" value="1.8" /></label>
+        <label>Initial ω₁ (rad/s) <input id="co-omega1" type="number" step="any" value="2.5" /></label>
+        <label>Final inertia I₂ (kg·m²) <input id="co-i2" type="number" step="any" value="0.6" /></label>
+        <button data-action="conservation">Compute</button>
+        <pre id="co-output" class="output"></pre>
+      </section>
+
+      <section class="card">
+        <h2>Rolling Without Slipping</h2>
+        <label>
+          Shape
+          <select id="ro-shape">
+            <option value="disk">Solid disk</option>
+            <option value="ring">Hoop</option>
+            <option value="sphere">Solid sphere</option>
+          </select>
+        </label>
+        <label>Mass (kg) <input id="ro-mass" type="number" step="any" value="2" /></label>
+        <label>Radius (m) <input id="ro-radius" type="number" step="any" value="0.2" /></label>
+        <label>Height drop (m) <input id="ro-height" type="number" step="any" value="0.8" /></label>
+        <button data-action="rolling">Compute</button>
+        <pre id="ro-output" class="output"></pre>
+      </section>
+
+      <section class="card">
+        <h2>Orbiting Satellites</h2>
+        <label>
+          Orbit type
+          <select id="or-type">
+            <option value="circular">Circular</option>
+            <option value="elliptical">Elliptical</option>
+          </select>
+        </label>
+        <label>Central mass (kg) <input id="or-central" type="number" step="any" value="5.97e24" /></label>
+        <label>Satellite mass (kg) <input id="or-sat" type="number" step="any" value="500" /></label>
+        <label>Radius (m) <input id="or-radius" type="number" step="any" value="7.0e6" /></label>
+        <label>Periapsis (m) <input id="or-peri" type="number" step="any" value="7.0e6" /></label>
+        <label>Apoapsis (m) <input id="or-apo" type="number" step="any" value="1.2e7" /></label>
+        <button data-action="orbit">Compute</button>
+        <pre id="or-output" class="output"></pre>
+      </section>
+
+      <section class="card">
+        <h2>Escape Velocity</h2>
+        <label>Central mass (kg) <input id="es-central" type="number" step="any" value="5.97e24" /></label>
+        <label>Radius (m) <input id="es-radius" type="number" step="any" value="6.37e6" /></label>
+        <button data-action="escape">Compute</button>
+        <pre id="es-output" class="output"></pre>
+      </section>
+    </main>
+
+    <footer>
+      <p>Built for AP Physics 1 Unit 6: Rotational Systems.</p>
+    </footer>
+
+    <script src="app.js"></script>
+  </body>
+</html>

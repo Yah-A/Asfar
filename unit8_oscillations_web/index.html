@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Unit 8 Oscillations Lab</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="hero">
+      <h1>Unit 8: Oscillations &amp; Simple Harmonic Motion</h1>
+      <p>
+        Explore SHM relationships, period/frequency, and energy exchanges using
+        interactive calculators.
+      </p>
+    </header>
+
+    <main>
+      <section class="card">
+        <h2>Spring Oscillator</h2>
+        <label>Mass m (kg) <input id="sp-mass" type="number" step="any" value="0.35" /></label>
+        <label>Spring constant k (N/m) <input id="sp-k" type="number" step="any" value="18" /></label>
+        <label>Period T (s) <input id="sp-period" type="number" step="any" value="" placeholder="optional" /></label>
+        <button data-action="spring">Compute</button>
+        <pre id="sp-output" class="output"></pre>
+      </section>
+
+      <section class="card">
+        <h2>Pendulum (Small Angle)</h2>
+        <label>Length L (m) <input id="pe-length" type="number" step="any" value="0.75" /></label>
+        <label>Period T (s) <input id="pe-period" type="number" step="any" value="" placeholder="optional" /></label>
+        <label>Gravity g (m/s²) <input id="pe-g" type="number" step="any" value="9.81" /></label>
+        <button data-action="pendulum">Compute</button>
+        <pre id="pe-output" class="output"></pre>
+      </section>
+
+      <section class="card">
+        <h2>SHM State</h2>
+        <label>Amplitude A (m) <input id="shm-amp" type="number" step="any" value="0.3" /></label>
+        <label>Frequency f (Hz) <input id="shm-freq" type="number" step="any" value="0.8" /></label>
+        <label>Phase (deg) <input id="shm-phase" type="number" step="any" value="0" /></label>
+        <label>Time t (s) <input id="shm-time" type="number" step="any" value="0.4" /></label>
+        <button data-action="shm-state">Compute</button>
+        <pre id="shm-output" class="output"></pre>
+      </section>
+
+      <section class="card">
+        <h2>SHM Energy</h2>
+        <label>Spring constant k (N/m) <input id="en-k" type="number" step="any" value="12" /></label>
+        <label>Amplitude A (m) <input id="en-amp" type="number" step="any" value="0.25" /></label>
+        <label>Position x (m) <input id="en-x" type="number" step="any" value="0.1" /></label>
+        <button data-action="energy">Compute</button>
+        <pre id="en-output" class="output"></pre>
+      </section>
+    </main>
+
+    <footer>
+      <p>Built for AP Physics 1 Unit 8: Oscillations.</p>
+    </footer>
+
+    <script src="app.js"></script>
+  </body>
+</html>

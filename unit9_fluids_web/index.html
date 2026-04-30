@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Unit 9 Fluids Lab</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="hero">
+      <h1>Unit 9: Fluids</h1>
+      <p>Explore density, pressure, buoyancy, and fluid flow with quick calculators.</p>
+    </header>
+
+    <main>
+      <section class="card">
+        <h2>Density</h2>
+        <label>Mass (kg) <input id="den-mass" type="number" step="any" value="0.85" /></label>
+        <label>Volume (m³) <input id="den-volume" type="number" step="any" value="0.00095" /></label>
+        <button data-action="density">Compute</button>
+        <pre id="den-output" class="output"></pre>
+      </section>
+
+      <section class="card">
+        <h2>Pressure</h2>
+        <label>Force (N) <input id="pr-force" type="number" step="any" value="480" /></label>
+        <label>Area (m²) <input id="pr-area" type="number" step="any" value="0.08" /></label>
+        <label>Radius (m) <input id="pr-radius" type="number" step="any" placeholder="optional" /></label>
+        <button data-action="pressure">Compute</button>
+        <pre id="pr-output" class="output"></pre>
+      </section>
+
+      <section class="card">
+        <h2>Hydrostatic Pressure</h2>
+        <label>Density (kg/m³) <input id="hy-density" type="number" step="any" value="1000" /></label>
+        <label>Depth (m) <input id="hy-depth" type="number" step="any" value="4.2" /></label>
+        <label>Reference P₀ (Pa) <input id="hy-p0" type="number" step="any" value="101325" /></label>
+        <button data-action="hydrostatic">Compute</button>
+        <pre id="hy-output" class="output"></pre>
+      </section>
+
+      <section class="card">
+        <h2>Buoyant Force</h2>
+        <label>Fluid density (kg/m³) <input id="bu-density" type="number" step="any" value="1000" /></label>
+        <label>Displaced volume (m³) <input id="bu-volume" type="number" step="any" value="0.003" /></label>
+        <label>Object mass (kg) <input id="bu-mass" type="number" step="any" value="2.2" /></label>
+        <button data-action="buoyant">Compute</button>
+        <pre id="bu-output" class="output"></pre>
+      </section>
+
+      <section class="card">
+        <h2>Float or Sink</h2>
+        <label>Object density (kg/m³) <input id="fl-object" type="number" step="any" value="800" /></label>
+        <label>Fluid density (kg/m³) <input id="fl-fluid" type="number" step="any" value="1000" /></label>
+        <button data-action="float">Compute</button>
+        <pre id="fl-output" class="output"></pre>
+      </section>
+
+      <section class="card">
+        <h2>Continuity Equation</h2>
+        <label>Area 1 (m²) <input id="co-area1" type="number" step="any" value="0.004" /></label>
+        <label>Velocity 1 (m/s) <input id="co-velocity1" type="number" step="any" value="1.6" /></label>
+        <label>Area 2 (m²) <input id="co-area2" type="number" step="any" value="0.0015" /></label>
+        <button data-action="continuity">Compute</button>
+        <pre id="co-output" class="output"></pre>
+      </section>
+
+      <section class="card">
+        <h2>Bernoulli Equation</h2>
+        <label>Density (kg/m³) <input id="be-density" type="number" step="any" value="1000" /></label>
+        <label>Pressure 1 (Pa) <input id="be-p1" type="number" step="any" value="180000" /></label>
+        <label>Velocity 1 (m/s) <input id="be-v1" type="number" step="any" value="1.2" /></label>
+        <label>Height 1 (m) <input id="be-h1" type="number" step="any" value="0.4" /></label>
+        <label>Pressure 2 (Pa) <input id="be-p2" type="number" step="any" value="150000" /></label>
+        <label>Height 2 (m) <input id="be-h2" type="number" step="any" value="1.1" /></label>
+        <button data-action="bernoulli">Compute</button>
+        <pre id="be-output" class="output"></pre>
+      </section>
+
+      <section class="card">
+        <h2>Torricelli’s Theorem</h2>
+        <label>Height drop (m) <input id="to-height" type="number" step="any" value="1.3" /></label>
+        <button data-action="torricelli">Compute</button>
+        <pre id="to-output" class="output"></pre>
+      </section>
+    </main>
+
+    <footer>
+      <p>Built for AP Physics 1 Unit 9: Fluids.</p>
+    </footer>
+
+    <script src="app.js"></script>
+  </body>
+</html>
