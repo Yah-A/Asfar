@@ -14,51 +14,24 @@ const state = {
   g: 9.81,
 };
 
-function solveSpring({ mass, k, period, frequency }) {
-  let m = mass;
-  let kVal = k;
-  let T = period;
-
-  if (m != null && kVal != null) {
-    T = 2 * Math.PI * Math.sqrt(m / kVal);
-  } else if (m != null && period != null) {
-    kVal = (4 * Math.PI ** 2 * m) / period ** 2;
-  } else if (kVal != null && period != null) {
-    m = (kVal * period ** 2) / (4 * Math.PI ** 2);
-  } else if (frequency != null && kVal != null) {
-    T = 1 / frequency;
-    m = (kVal * T ** 2) / (4 * Math.PI ** 2);
-  } else {
-    return null;
-  }
-
-  const omega = 2 * Math.PI / T;
-  return { mass: m, k: kVal, period: T, frequency: 1 / T, omega };
+function solveSpring({ mass, k }) {
+  if (mass == null || k == null) return null;
+  const period = 2 * Math.PI * Math.sqrt(mass / k);
+  const omega = 2 * Math.PI / period;
+  return { mass, k, period, frequency: 1 / period, omega };
 }
 
-function solvePendulum({ length, period, frequency, g }) {
-  let L = length;
-  let T = period;
+function solvePendulum({ length, g }) {
+  if (length == null) return null;
   const gVal = g ?? state.g;
-
-  if (L != null) {
-    T = 2 * Math.PI * Math.sqrt(L / gVal);
-  } else if (period != null) {
-    L = (gVal * period ** 2) / (4 * Math.PI ** 2);
-  } else if (frequency != null) {
-    T = 1 / frequency;
-    L = (gVal * T ** 2) / (4 * Math.PI ** 2);
-  } else {
-    return null;
-  }
-
-  const omega = 2 * Math.PI / T;
-  return { length: L, period: T, frequency: 1 / T, omega, g: gVal };
+  const period = 2 * Math.PI * Math.sqrt(length / gVal);
+  const omega = 2 * Math.PI / period;
+  return { length, period, frequency: 1 / period, omega, g: gVal };
 }
 
-function shmState({ amplitude, frequency, phaseDeg, time, period }) {
+function shmState({ amplitude, frequency, phaseDeg, time }) {
   const A = amplitude;
-  const f = frequency ?? (period != null ? 1 / period : null);
+  const f = frequency;
   if (A == null || f == null || time == null) return null;
   const omega = 2 * Math.PI * f;
   const phase = (phaseDeg ?? 0) * (Math.PI / 180);
@@ -80,13 +53,9 @@ function energyState({ k, amplitude, position }) {
 function handleSpring() {
   const mass = parseFloat($("sp-mass").value);
   const k = parseFloat($("sp-k").value);
-  const period = parseFloat($("sp-period").value);
-  const frequency = parseFloat($("sp-frequency").value);
   const result = solveSpring({
     mass: Number.isFinite(mass) ? mass : null,
     k: Number.isFinite(k) ? k : null,
-    period: Number.isFinite(period) ? period : null,
-    frequency: Number.isFinite(frequency) ? frequency : null,
   });
   $("sp-output").textContent = result
     ? [
@@ -96,18 +65,14 @@ function handleSpring() {
         `m = ${fmt(result.mass, "kg")}`,
         `k = ${fmt(result.k, "N/m")}`,
       ].join("\n")
-    : "Enter two known values (mass/k/period/frequency).";
+    : "Enter mass and spring constant.";
 }
 
 function handlePendulum() {
   const length = parseFloat($("pe-length").value);
-  const period = parseFloat($("pe-period").value);
-  const frequency = parseFloat($("pe-frequency").value);
   const g = parseFloat($("pe-g").value);
   const result = solvePendulum({
     length: Number.isFinite(length) ? length : null,
-    period: Number.isFinite(period) ? period : null,
-    frequency: Number.isFinite(frequency) ? frequency : null,
     g: Number.isFinite(g) ? g : null,
   });
   $("pe-output").textContent = result
@@ -118,19 +83,17 @@ function handlePendulum() {
         `L = ${fmt(result.length, "m")}`,
         `g = ${fmt(result.g, "m/s^2")}`,
       ].join("\n")
-    : "Enter length, period, or frequency.";
+    : "Enter pendulum length.";
 }
 
 function handleShmState() {
-  const amplitude = parseFloat($("shm-amplitude").value);
-  const frequency = parseFloat($("shm-frequency").value);
-  const period = parseFloat($("shm-period").value);
+  const amplitude = parseFloat($("shm-amp").value);
+  const frequency = parseFloat($("shm-freq").value);
   const phase = parseFloat($("shm-phase").value);
   const time = parseFloat($("shm-time").value);
   const result = shmState({
     amplitude: Number.isFinite(amplitude) ? amplitude : null,
     frequency: Number.isFinite(frequency) ? frequency : null,
-    period: Number.isFinite(period) ? period : null,
     phaseDeg: Number.isFinite(phase) ? phase : 0,
     time: Number.isFinite(time) ? time : null,
   });
@@ -141,13 +104,13 @@ function handleShmState() {
         `a = ${fmt(result.a, "m/s^2")}`,
         `omega = ${fmt(result.omega, "rad/s")}`,
       ].join("\n")
-    : "Enter amplitude and (frequency or period) plus time.";
+    : "Enter amplitude, frequency, and time.";
 }
 
 function handleEnergy() {
   const k = parseFloat($("en-k").value);
-  const amplitude = parseFloat($("en-amplitude").value);
-  const position = parseFloat($("en-position").value);
+  const amplitude = parseFloat($("en-amp").value);
+  const position = parseFloat($("en-x").value);
   const result = energyState({
     k: Number.isFinite(k) ? k : null,
     amplitude: Number.isFinite(amplitude) ? amplitude : null,
@@ -167,13 +130,12 @@ document.querySelectorAll("button[data-action]").forEach((button) => {
     const action = button.dataset.action;
     if (action === "spring") handleSpring();
     if (action === "pendulum") handlePendulum();
-    if (action === "shm") handleShmState();
+    if (action === "shm-state") handleShmState();
     if (action === "energy") handleEnergy();
   });
 });
 
-document.getElementById("clear-shm").addEventListener("click", () => {
-  ["shm-output"].forEach((id) => {
-    $(id).textContent = "";
-  });
-});
+handleSpring();
+handlePendulum();
+handleShmState();
+handleEnergy();
